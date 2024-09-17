@@ -2,10 +2,25 @@
     --main-1: #f22f27;
     --main-4: #338eca;
     --main-5: #4c991b;
+    --background-color-light: #ffffff;
+    --text-color-light: #000000;
+    --background-color-dark: #2e2e2e;
+    --text-color-dark: #e0e0e0;
+    --button-background-dark: #444;
+    --button-border-dark: #666;
 }
 
-.card {
-    font: 20px/30px serif, 'Noto Serif CJK SC';
+.night-mode {
+    --background-color: #222222;
+    --text-color: #ffffff;
+}
+body, .card {
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+}
+.night-mode body, .night-mode .card {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
 }
 
 .h1 {
@@ -71,7 +86,7 @@
 
 .options button {
     background-color: transparent;
-    color: black;
+    color: inherit;
     border: 1px solid #ccc;
     padding: 13px;
     margin: 8px 0;
@@ -88,13 +103,18 @@
     border-radius: 20px;
     transition: all 0.3s ease;
 }
-
+.night-mode .options button {
+    border: 1px solid var(--button-border-dark);
+}
 .options button.selected {
     background-color: transparent;
     color: #27bd9f;
     border: 2px solid #27bd9f;
 }
-
+.night-mode .options button.selected {
+    color: #27bd9f;
+    border: 2px solid #27bd9f;
+}
 .options button.correct {
     background-color: #27bd9f;
     color: white;
@@ -102,7 +122,10 @@
     pointer-events: none;
     border: none;
 }
-
+.night-mode .options button.correct {
+    background-color: #27bd9f;
+    color: white;
+}
 .options button.incorrect {
     background-color: #f8f8f8;
     color: #d9534f;
@@ -110,13 +133,21 @@
     pointer-events: none;
     border: 1px solid #d9534f;
 }
-
+.night-mode .options button.incorrect {
+    background-color: var(--button-background-dark);
+    color: #d9534f;
+    border: 1px solid #d9534f;
+}
 .options button.missed {
     background-color: #27bd9f;
     color: white;
     cursor: default;
     pointer-events: none;
     border: none;
+}
+.night-mode .options button.missed {
+    background-color: #27bd9f;
+    color: white;
 }
 
 button:hover {
@@ -143,6 +174,7 @@ button:active {
     display: inline-block;
     width: 55px;
     height: 30px;
+
 }
 
 .switch input {
@@ -181,4 +213,12 @@ input:checked + .slider {
 
 input:checked + .slider:before {
     transform: translateX(25px);
+}
+.shuffle-option {
+    font-size: 0.8em;
+    color: var(--shuffle-option-color-light);
+}
+
+.night-mode .shuffle-option {
+    color: var(--shuffle-option-color-dark);
 }
