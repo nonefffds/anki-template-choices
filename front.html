@@ -1,0 +1,82 @@
+<div class="card">
+  <div class="h1 xleft">
+    <div class="h2"><strong>{{问题}}</strong></div>
+    <div id="options" class="options"></div>
+  </div>
+</div>
+<script>
+(function() {
+    // Function to shuffle the options and correct indexes together
+    function shuffleOptionsAndAnswers(options, answerIndexes) {
+        let shuffledOptions = options.map((option, index) => ({ option, index }));
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        return {
+            options: shuffledOptions.map(item => item.option),
+            indexes: shuffledOptions.map((item, i) => answerIndexes.includes(item.index) ? i : null).filter(i => i !== null)
+        };
+    }
+
+    var optionsHtml = `{{选项}}`;
+    var options = optionsHtml.split('<br>').map(option => option.trim()).filter(option => option !== '');
+    var answer = '{{答案}}';
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    // Parse the correct answer indexes
+    var correctIndexes = answer.split(',').map(a => !isNaN(a) ? parseInt(a) - 1 : alphabet.indexOf(a.toUpperCase()));
+
+    // Check if shuffle is enabled
+    var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
+    if (isShuffled) {
+        const shuffled = shuffleOptionsAndAnswers(options, correctIndexes);
+        options = shuffled.options;
+        correctIndexes = shuffled.indexes;
+        localStorage.setItem('shuffled-options', JSON.stringify(options));
+        localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
+    } else {
+        localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
+    }
+
+    var labeledOptions = options.map(function(option, index) {
+        return `<button id="option${index}" value="${alphabet[index]}" onclick="toggleOption(${index})">${alphabet[index]}. ${option}</button>`;
+    }).join('');
+    document.getElementById('options').innerHTML = labeledOptions;
+
+    var isMultipleChoice = answer.includes(',');
+    var questionType = isMultipleChoice ? '（多选题）' : '（单选题）';
+    document.querySelector('.h2').innerHTML += questionType;
+
+    window.toggleOption = function(index) {
+        var button = document.getElementById('option' + index);
+        if (!isMultipleChoice) {
+            options.forEach((_, i) => {
+                document.getElementById('option' + i).classList.remove('selected');
+            });
+        }
+        button.classList.toggle('selected');
+        updateSelectedOptions();
+    };
+
+    window.updateSelectedOptions = function() {
+        var selectedOptions = [];
+        options.forEach((option, index) => {
+            var button = document.getElementById('option' + index);
+            if (button && button.classList.contains('selected')) {
+                selectedOptions.push(button.value);
+            }
+        });
+        gData.clickedValues = selectedOptions;
+        localStorage.setItem('selected-options', JSON.stringify(gData.clickedValues));
+        if (typeof anki !== 'undefined' && anki.saveData) {
+            anki.saveData('selected-options', gData.clickedValues);
+        }
+    };
+    
+    window.gData = {
+        clickedValues: [],
+        correctanswer: correctIndexes
+    };
+})();
+</script>
