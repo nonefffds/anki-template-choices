@@ -10,3 +10,6 @@
 ## 效果
 
 ![图片](preview.png)
+
+## 致谢
+[参考了 cyliu-phy/simple-anki-template 的样式](https://github.com/cyliu-phy/simple-anki-template)
