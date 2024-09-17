@@ -2,6 +2,14 @@
   <div class="h1 xleft">
     <div class="h2"><strong>{{问题}}</strong></div>
     <div id="options" class="options"></div>
+<div class="night-mode-toggle">
+    <span>夜间模式</span>
+    <label class="switch">
+        <input type="checkbox" id="night-mode-toggle">
+        <span class="slider round"></span>
+    </label>
+</div>
+
   </div>
 </div>
 <script>
@@ -45,8 +53,8 @@
     document.getElementById('options').innerHTML = labeledOptions;
 
     var isMultipleChoice = answer.includes(',');
-    var questionType = isMultipleChoice ? '（多选题）' : '（单选题）';
-    document.querySelector('.h2').innerHTML += questionType;
+    var questionType = isMultipleChoice ? '多选题' : '单选题';
+    document.querySelector('.h2').innerHTML += '<br>' + questionType;
 
     window.toggleOption = function(index) {
         var button = document.getElementById('option' + index);
@@ -78,5 +86,23 @@
         clickedValues: [],
         correctanswer: correctIndexes
     };
+    // Night mode toggle functionality
+    var nightModeToggle = document.getElementById('night-mode-toggle');
+    
+    nightModeToggle.addEventListener('change', function() {
+        if (nightModeToggle.checked) {
+            document.documentElement.classList.add('night-mode');
+            localStorage.setItem('night-mode', 'enabled');
+        } else {
+            document.documentElement.classList.remove('night-mode');
+            localStorage.setItem('night-mode', 'disabled');
+        }
+    });
+
+    // Initialize night mode based on previous settings
+    if (localStorage.getItem('night-mode') === 'enabled') {
+        document.documentElement.classList.add('night-mode');
+        nightModeToggle.checked = true;
+    }
 })();
 </script>
