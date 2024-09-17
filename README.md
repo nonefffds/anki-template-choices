@@ -8,11 +8,11 @@
 - 支持单选/多选
 - 判断正确答案
 - 在Anki for Windows/AnkiDroid上兼容性可能最好，Ankiweb 上字体缺失
+- 夜间模式
 
 ## TO-DO：
 
 - 计时
-- 夜间模式
 - 正确率统计
 - latex支持
 - 样式优化
