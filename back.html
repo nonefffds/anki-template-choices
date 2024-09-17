@@ -2,6 +2,12 @@
   <div class="h1 xleft">
    <div class="h2"><strong>{{问题}}</strong></div>
     <div id="options" class="options"></div>
+<div class="night-mode-toggle">
+    <span>夜间模式</span>
+    <label class="switch">
+        <input type="checkbox" id="night-mode-toggle">
+        <span class="slider round"></span>
+    </label>
     <hr>
     <div class="h2 slide">
 			<div>
@@ -53,8 +59,8 @@
         correctIndexes = answer.split(',').map(a => !isNaN(a) ? parseInt(a) - 1 : alphabet.indexOf(a.toUpperCase()));
     }
 
-    var questionType = answer.includes(',') ? '（多选题）' : '（单选题）';
-    document.querySelector('.h2').innerHTML += questionType;
+    var questionType = answer.includes(',') ? '多选题' : '单选题';
+    document.querySelector('.h2').innerHTML += '<br>' + questionType;
     
     var selectedOptions = JSON.parse(localStorage.getItem('selected-options') || '[]');
     if (typeof anki !== 'undefined' && anki.loadData) {
@@ -98,5 +104,23 @@
 
     var correctness = isCorrect ? '正确' : '错误';
     document.getElementById('correctness').innerHTML = correctness;
+ // Night mode toggle functionality
+    var nightModeToggle = document.getElementById('night-mode-toggle');
+    
+    nightModeToggle.addEventListener('change', function() {
+        if (nightModeToggle.checked) {
+            document.documentElement.classList.add('night-mode');
+            localStorage.setItem('night-mode', 'enabled');
+        } else {
+            document.documentElement.classList.remove('night-mode');
+            localStorage.setItem('night-mode', 'disabled');
+        }
+    });
+
+    // Initialize night mode based on previous settings
+    if (localStorage.getItem('night-mode') === 'enabled') {
+        document.documentElement.classList.add('night-mode');
+        nightModeToggle.checked = true;
+    }
 })();
 </script>
