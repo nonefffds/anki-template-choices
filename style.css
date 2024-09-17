@@ -199,10 +199,32 @@ body.night_mode {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+button {
+  appearance: none; /* 移除默认样式 */
+  -webkit-appearance: none; /* 针对WebKit浏览器 */
+  -moz-appearance: none; /* 针对Firefox */
+
+  background-color: #007BFF; /* 设置背景颜色 */
+
+  padding: 10px 20px; /* 设置内边距 */
+  border-radius: 10px; /* 设置圆角 */
+  cursor: pointer; /* 鼠标悬停样式 */
+  font-size: 16px; /* 设置字体大小 */
+  transition: background-color 0.3s; /* 设置过渡效果 */
+}
+
+button:hover {
+  background-color: #0056b3; /* 悬停时背景颜色 */
+}
+
+button:focus {
+  outline: none; /* 移除焦点时的轮廓 */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* 添加自定义焦点效果 */
+}
 /* 通用选项按钮样式 */
 .options button {
     background-color: transparent;
-    border: 1px solid var(#f3f3f3);
+    border: 1px solid var(#101010);
     padding: 10px;
     margin: 5px 0;
     width: 100%;
