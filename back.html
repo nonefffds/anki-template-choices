@@ -1,23 +1,24 @@
 <div class="card">
   <div class="h1 xleft">
    <div class="h2"><strong>{{问题}}</strong></div>
+        <span class="question-type-label"></span>
     <div id="options" class="options"></div>
-<div class="night-mode-toggle">
-    <span>夜间模式</span>
+        <div class="night-mode-toggle">
+    <span class="night-mode-label">夜间模式</span>
     <label class="switch">
         <input type="checkbox" id="night-mode-toggle">
         <span class="slider round"></span>
     </label>
     <hr>
     <div class="h2 slide">
-			<div>
-				<span class="shuffle-option">选项乱序</span>
-  				<label class="switch">
-    				<input type="checkbox" id="shuffle-toggle" checked>
-   		  		<span class="slider round"></span>
- 				</label>
-  				
-			</div>
+            <div>
+                <span class="shuffle-option">选项乱序</span>
+                <label class="switch">
+                    <input type="checkbox" id="shuffle-toggle" checked>
+                <span class="slider round"></span>
+                </label>
+                
+            </div>
 
       <div class="answer">正确答案: <br><span id="formatted-answer"></span></div>
       <div class="result">你选择了: <span id="selected-answer"></span></div>
@@ -60,7 +61,7 @@
     }
 
     var questionType = answer.includes(',') ? '多选题' : '单选题';
-    document.querySelector('.h2').innerHTML += '<br>' + questionType;
+    document.querySelector('.question-type-label').innerHTML += questionType;
     
     var selectedOptions = JSON.parse(localStorage.getItem('selected-options') || '[]');
     if (typeof anki !== 'undefined' && anki.loadData) {

@@ -1,9 +1,10 @@
 <div class="card">
   <div class="h1 xleft">
     <div class="h2"><strong>{{问题}}</strong></div>
+<span class="question-type-label"></span>
     <div id="options" class="options"></div>
 <div class="night-mode-toggle">
-    <span>夜间模式</span>
+    <span class="night-mode-label">夜间模式</span>
     <label class="switch">
         <input type="checkbox" id="night-mode-toggle">
         <span class="slider round"></span>
@@ -54,7 +55,8 @@
 
     var isMultipleChoice = answer.includes(',');
     var questionType = isMultipleChoice ? '多选题' : '单选题';
-    document.querySelector('.h2').innerHTML += '<br>' + questionType;
+    document.querySelector('.question-type-label').innerHTML += questionType;
+
 
     window.toggleOption = function(index) {
         var button = document.getElementById('option' + index);

@@ -37,7 +37,7 @@ body, .card {
 
 .answer, .result, .analyse {
     position: relative;
-    font-size: 0.8em;
+    font-size: 0.9em;
     font-style: normal;
     line-height: 1.6;
     text-indent: 0;
@@ -45,7 +45,7 @@ body, .card {
 }
 
 .shuffle-option {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #101010;
 }
 
@@ -221,4 +221,13 @@ input:checked + .slider:before {
 
 .night-mode .shuffle-option {
     color: var(--shuffle-option-color-dark);
+}
+
+.question-type-label {
+    font-size: 0.9em;
+    display: block; 
+    margin-top: 5px; 
+}
+.night-mode-label {
+    font-size: 0.9em; 
 }

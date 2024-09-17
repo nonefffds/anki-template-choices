@@ -7,7 +7,7 @@
 - 选项乱序
 - 支持单选/多选
 - 判断正确答案
-- 在Anki for Windows/AnkiDroid上兼容性可能最好，Ankiweb 上字体缺失
+- 在Anki for Windows/AnkiDroid上兼容性可能最好，Ankiweb 上可能会有字体缺失
 - 夜间模式
 
 ## TO-DO：
@@ -21,7 +21,13 @@
 
 ## 效果
 
-![图片](preview.png)
+### 日间
+
+![图片](preview-sun.png)
+
+### 夜间
+
+![图片](preview-night.png)
 
 ## 致谢
 [参考了 cyliu-phy/simple-anki-template 的样式](https://github.com/cyliu-phy/simple-anki-template)
