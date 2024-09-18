@@ -2,6 +2,8 @@
 
 自用选择题 anki 模板
 
+测试用 anki 卡组包已放在 release 和 [repo 里](for-testing.apkg)
+
 ## 功能
 
 - 选项乱序
@@ -17,7 +19,6 @@
 - latex支持
 - 样式优化
 - 写使用方式
-- 导出apkg样版
 
 ## 效果
 
@@ -28,6 +29,21 @@
 ### 夜间
 
 ![图片](preview-night.png)
+
+## tips：
+
+卡组字段分别是：
+
+- 问题
+- 选项
+- 答案
+- 解析
+
+其中选项需要打开“默认使用HTML编辑器”，每个选项用``<br>```隔开
+
+以下为选项例：
+
+``作为观察当代世界变化的工具<br>指导中国发展的行动指南<br>引领人类社会进步的科学理论<br>提供革命、建设、改革的固定方案``
 
 ## 致谢
 [参考了 cyliu-phy/simple-anki-template 的样式](https://github.com/cyliu-phy/simple-anki-template)
