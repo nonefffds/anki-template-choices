@@ -1,30 +1,29 @@
 <div class="card">
   <div class="h1 xleft">
-   <div class="h2"><strong>{{问题}}</strong></div>
-        <span class="question-type-label"></span>
+    <div class="h2"><strong>{{问题}}</strong></div>
+    <span class="question-type-label"></span>
     <div id="options" class="options"></div>
-        <div class="night-mode-toggle">
-    <span class="night-mode-label">夜间模式</span>
-    <label class="switch">
+    <div class="night-mode-toggle">
+      <span class="night-mode-label">夜间模式</span>
+      <label class="switch">
         <input type="checkbox" id="night-mode-toggle">
         <span class="slider round"></span>
-    </label>
-    <hr>
-    <div class="h2 slide">
-            <div>
-                <span class="shuffle-option">选项乱序</span>
-                <label class="switch">
-                    <input type="checkbox" id="shuffle-toggle" checked>
-                <span class="slider round"></span>
-                </label>
-                
-            </div>
-
-      <div class="answer">正确答案: <br><span id="formatted-answer"></span></div>
-      <div class="result">你选择了: <span id="selected-answer"></span></div>
-      <div class="result">是否正确: <span id="correctness"></span></div>
-            <div class="result"><br>正确率: <span id="accuracy"></span></div>
-      <div class="result">此卡学习时间: <span id="study-time"></span></div>
+      </label>
+      <hr>
+      <div class="h2 slide">
+        <div>
+          <span class="shuffle-option">选项乱序</span>
+          <label class="switch">
+            <input type="checkbox" id="shuffle-toggle" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="answer">正确答案: <br><span id="formatted-answer"></span></div>
+        <div class="result">你选择了: <span id="selected-answer"></span></div>
+        <div class="result">是否正确: <span id="correctness"></span></div>
+        <div class="result"><br>正确率: <span id="accuracy"></span></div>
+        <div class="result">此卡学习时间: <span id="study-time"></span></div>
+      </div>
     </div>
   </div>
 
@@ -38,80 +37,77 @@
 </div>
 
 <script>
-(function() {
-    var gData = {};
-    var optionsHtml = `{{选项}}`;
-    var options = optionsHtml.split('<br>').map(option => option.trim()).filter(option => option !== '');
-    var answer = '{{答案}}';
-    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+(function () {
+    const gData = {};
+    const optionsHtml = `{{选项}}`;
+    let options = optionsHtml.split('<br>').map(option => option.trim()).filter(option => option !== '');
+    const answer = '{{答案}}';
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     
-    var shuffleToggle = document.getElementById('shuffle-toggle');
+    const shuffleToggle = document.getElementById('shuffle-toggle');
 
-    // Save shuffle state
-    shuffleToggle.addEventListener('change', function() {
+    shuffleToggle.addEventListener('change', function () {
         localStorage.setItem('shuffle-options', shuffleToggle.checked);
     });
 
-    var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
+    const isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
     shuffleToggle.checked = isShuffled;
 
+    let correctIndexes;
     if (isShuffled) {
-        // Load shuffled options and correct indexes from local storage
         options = JSON.parse(localStorage.getItem('shuffled-options') || JSON.stringify(options));
-        var correctIndexes = JSON.parse(localStorage.getItem('shuffled-correct-indexes'));
+        correctIndexes = JSON.parse(localStorage.getItem('shuffled-correct-indexes'));
     } else {
         correctIndexes = answer.split(',').map(a => !isNaN(a) ? parseInt(a) - 1 : alphabet.indexOf(a.toUpperCase()));
     }
 
-    var questionType = answer.includes(',') ? '多选题' : '单选题';
+    const questionType = answer.includes(',') ? '多选题' : '单选题';
     document.querySelector('.question-type-label').innerHTML += questionType;
     
-    var selectedOptions = JSON.parse(localStorage.getItem('selected-options') || '[]');
+    let selectedOptions = JSON.parse(localStorage.getItem('selected-options') || '[]');
     if (typeof anki !== 'undefined' && anki.loadData) {
         selectedOptions = anki.loadData('selected-options') || selectedOptions;
     }
     
     gData.clickedValues = selectedOptions;
-    var selectedAnswer = selectedOptions.join(', ');
+    const selectedAnswer = selectedOptions.join(', ');
     document.getElementById('selected-answer').innerHTML = selectedAnswer;
 
-    var formattedAnswer = correctIndexes.map(index => `${alphabet[index]} - ${options[index]}`).join('<br>');
+    const formattedAnswer = correctIndexes.map(index => `${alphabet[index]} - ${options[index]}`).join('<br>');
     document.getElementById('formatted-answer').innerHTML = formattedAnswer;
 
-    var labeledOptions = options.map(function(option, index) {
-        var isSelected = selectedOptions.includes(alphabet[index]);
-        var isCorrect = correctIndexes.includes(index);
-        var className = '';
-        var symbol = '';
+    const labeledOptions = options.map(function (option, index) {
+        const isSelected = selectedOptions.includes(alphabet[index]);
+        const isCorrect = correctIndexes.includes(index);
+        let className = '';
+        let symbol = '';
 
-           if (isSelected && isCorrect) {
-        className = 'correct';
-        symbol = '✔';
-    } else if (isSelected && !isCorrect) {
-        className = 'incorrect';
-        symbol = '✘';
-    } else if (!isSelected && isCorrect) {
-        className = 'missed';
-        symbol = '';
-    }
+        if (isSelected && isCorrect) {
+            className = 'correct';
+            symbol = '✔';
+        } else if (isSelected && !isCorrect) {
+            className = 'incorrect';
+            symbol = '✘';
+        } else if (!isSelected && isCorrect) {
+            className = 'missed';
+        }
 
-    return `<button class="${className}" disabled>
-                <span style="flex-grow: 1;">${alphabet[index]}. ${option}</span>
-                <span style="flex-basis: 10%; text-align: right;">${symbol}</span>
-            </button>`;
-}).join('');
+        return `<button class="${className}" disabled>
+                  <span style="flex-grow: 1;">${alphabet[index]}. ${option}</span>
+                  <span style="flex-basis: 10%; text-align: right;">${symbol}</span>
+                </button>`;
+    }).join('');
     document.getElementById('options').innerHTML = labeledOptions;
 
-    // Check if the selected options are exactly the same as the correct ones
-    var isCorrect = correctIndexes.every(index => selectedOptions.includes(alphabet[index])) && 
-                    selectedOptions.length === correctIndexes.length;
+    const isCorrect = correctIndexes.every(index => selectedOptions.includes(alphabet[index])) && 
+                      selectedOptions.length === correctIndexes.length;
 
-    var correctness = isCorrect ? '正确' : '错误';
+    const correctness = isCorrect ? '正确' : '错误';
     document.getElementById('correctness').innerHTML = correctness;
- // Night mode toggle functionality
-    var nightModeToggle = document.getElementById('night-mode-toggle');
+
+    const nightModeToggle = document.getElementById('night-mode-toggle');
     
-    nightModeToggle.addEventListener('change', function() {
+    nightModeToggle.addEventListener('change', function () {
         if (nightModeToggle.checked) {
             document.documentElement.classList.add('night-mode');
             localStorage.setItem('night-mode', 'enabled');
@@ -121,13 +117,13 @@
         }
     });
 
-    // Initialize night mode based on previous settings
     if (localStorage.getItem('night-mode') === 'enabled') {
         document.documentElement.classList.add('night-mode');
         nightModeToggle.checked = true;
     }
-    var correctCount = parseInt(localStorage.getItem('correctCount') || '0');
-    var totalCount = parseInt(localStorage.getItem('totalCount') || '0');
+
+    let correctCount = parseInt(localStorage.getItem('correctCount') || '0');
+    let totalCount = parseInt(localStorage.getItem('totalCount') || '0');
     
     if (isCorrect) {
         correctCount++;
@@ -137,20 +133,18 @@
     localStorage.setItem('correctCount', correctCount);
     localStorage.setItem('totalCount', totalCount);
     
-    var accuracy = (correctCount / totalCount * 100).toFixed(2) + '%';
+    const accuracy = (correctCount / totalCount * 100).toFixed(2) + '%';
     document.getElementById('accuracy').innerHTML = accuracy;
 
-    // Study time calculation
-    var startTime = parseInt(localStorage.getItem('startTime') || Date.now());
-    var elapsedTime = Date.now() - startTime;
+    const startTime = parseInt(localStorage.getItem('startTime') || Date.now());
+    const elapsedTime = Date.now() - startTime;
     
-    var minutes = Math.floor(elapsedTime / 60000);
-    var seconds = ((elapsedTime % 60000) / 1000).toFixed(0);
-    var studyTime = minutes + " 分 " + (seconds < 10 ? '0' : '') + seconds + " 秒";
+    const minutes = Math.floor(elapsedTime / 60000);
+    const seconds = ((elapsedTime % 60000) / 1000).toFixed(0);
+    const studyTime = minutes + " 分 " + (seconds < 10 ? '0' : '') + seconds + " 秒";
     
     document.getElementById('study-time').innerHTML = studyTime;
 
-    // Reset start time for the next session
     localStorage.setItem('startTime', Date.now());
 })();
 </script>

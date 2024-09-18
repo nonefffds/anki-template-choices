@@ -14,10 +14,12 @@
     --background-color: #222222;
     --text-color: #ffffff;
 }
+
 body, .card {
     background-color: var(--background-color-light);
     color: var(--text-color-light);
 }
+
 .night-mode body, .night-mode .card {
     background-color: var(--background-color-dark);
     color: var(--text-color-dark);
@@ -103,18 +105,22 @@ body, .card {
     border-radius: 20px;
     transition: all 0.3s ease;
 }
+
 .night-mode .options button {
     border: 1px solid var(--button-border-dark);
 }
+
 .options button.selected {
     background-color: transparent;
     color: #27bd9f;
     border: 2px solid #27bd9f;
 }
+
 .night-mode .options button.selected {
     color: #27bd9f;
     border: 2px solid #27bd9f;
 }
+
 .options button.correct {
     background-color: #27bd9f;
     color: white;
@@ -122,10 +128,12 @@ body, .card {
     pointer-events: none;
     border: none;
 }
+
 .night-mode .options button.correct {
     background-color: #27bd9f;
     color: white;
 }
+
 .options button.incorrect {
     background-color: #f8f8f8;
     color: #d9534f;
@@ -133,11 +141,13 @@ body, .card {
     pointer-events: none;
     border: 1px solid #d9534f;
 }
+
 .night-mode .options button.incorrect {
     background-color: var(--button-background-dark);
     color: #d9534f;
     border: 1px solid #d9534f;
 }
+
 .options button.missed {
     background-color: #27bd9f;
     color: white;
@@ -145,6 +155,7 @@ body, .card {
     pointer-events: none;
     border: none;
 }
+
 .night-mode .options button.missed {
     background-color: #27bd9f;
     color: white;
@@ -174,7 +185,6 @@ button:active {
     display: inline-block;
     width: 55px;
     height: 30px;
-
 }
 
 .switch input {
@@ -214,6 +224,7 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(25px);
 }
+
 .shuffle-option {
     font-size: 0.9em;
     color: var(--shuffle-option-color-light);
@@ -225,9 +236,10 @@ input:checked + .slider:before {
 
 .question-type-label {
     font-size: 0.9em;
-    display: block; 
-    margin-top: 5px; 
+    display: block;
+    margin-top: 5px;
 }
+
 .night-mode-label {
-    font-size: 0.9em; 
+    font-size: 0.9em;
 }

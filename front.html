@@ -1,22 +1,22 @@
 <div class="card">
   <div class="h1 xleft">
     <div class="h2"><strong>{{问题}}</strong></div>
-<span class="question-type-label"></span>
+    <span class="question-type-label"></span>
     <div id="options" class="options"></div>
-<div class="night-mode-toggle">
-    <span class="night-mode-label">夜间模式</span>
-    <label class="switch">
+    <div class="night-mode-toggle">
+      <span class="night-mode-label">夜间模式</span>
+      <label class="switch">
         <input type="checkbox" id="night-mode-toggle">
         <span class="slider round"></span>
-    </label>
-</div>
-
+      </label>
+    </div>
   </div>
 </div>
+
 <script>
-(function() {
+(function () {
     var gData = {};
-    // Function to shuffle the options and correct indexes together
+    
     function shuffleOptionsAndAnswers(options, answerIndexes) {
         let shuffledOptions = options.map((option, index) => ({ option, index }));
         for (let i = shuffledOptions.length - 1; i > 0; i--) {
@@ -34,10 +34,8 @@
     var answer = '{{答案}}';
     var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    // Parse the correct answer indexes
     var correctIndexes = answer.split(',').map(a => !isNaN(a) ? parseInt(a) - 1 : alphabet.indexOf(a.toUpperCase()));
 
-    // Check if shuffle is enabled
     var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
     if (isShuffled) {
         const shuffled = shuffleOptionsAndAnswers(options, correctIndexes);
@@ -49,7 +47,7 @@
         localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
     }
 
-    var labeledOptions = options.map(function(option, index) {
+    var labeledOptions = options.map(function (option, index) {
         return `<button id="option${index}" value="${alphabet[index]}" onclick="toggleOption(${index})">${alphabet[index]}. ${option}</button>`;
     }).join('');
     document.getElementById('options').innerHTML = labeledOptions;
@@ -58,8 +56,7 @@
     var questionType = isMultipleChoice ? '多选题' : '单选题';
     document.querySelector('.question-type-label').innerHTML += questionType;
 
-
-    window.toggleOption = function(index) {
+    window.toggleOption = function (index) {
         var button = document.getElementById('option' + index);
         if (!isMultipleChoice) {
             options.forEach((_, i) => {
@@ -70,9 +67,9 @@
         updateSelectedOptions();
     };
 
-    window.updateSelectedOptions = function() {
+    window.updateSelectedOptions = function () {
         var selectedOptions = [];
-        options.forEach((option, index) => {
+        options.forEach((_, index) => {
             var button = document.getElementById('option' + index);
             if (button && button.classList.contains('selected')) {
                 selectedOptions.push(button.value);
@@ -84,15 +81,14 @@
             anki.saveData('selected-options', gData.clickedValues);
         }
     };
-    
+
     window.gData = {
         clickedValues: [],
         correctanswer: correctIndexes
     };
-    // Night mode toggle functionality
+
     var nightModeToggle = document.getElementById('night-mode-toggle');
-    
-    nightModeToggle.addEventListener('change', function() {
+    nightModeToggle.addEventListener('change', function () {
         if (nightModeToggle.checked) {
             document.documentElement.classList.add('night-mode');
             localStorage.setItem('night-mode', 'enabled');
@@ -102,7 +98,6 @@
         }
     });
 
-    // Initialize night mode based on previous settings
     if (localStorage.getItem('night-mode') === 'enabled') {
         document.documentElement.classList.add('night-mode');
         nightModeToggle.checked = true;
