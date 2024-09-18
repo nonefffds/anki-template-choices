@@ -23,6 +23,8 @@
       <div class="answer">正确答案: <br><span id="formatted-answer"></span></div>
       <div class="result">你选择了: <span id="selected-answer"></span></div>
       <div class="result">是否正确: <span id="correctness"></span></div>
+            <div class="result"><br>正确率: <span id="accuracy"></span></div>
+      <div class="result">此卡学习时间: <span id="study-time"></span></div>
     </div>
   </div>
 
@@ -123,5 +125,31 @@
         document.documentElement.classList.add('night-mode');
         nightModeToggle.checked = true;
     }
+    var correctCount = parseInt(localStorage.getItem('correctCount') || '0');
+    var totalCount = parseInt(localStorage.getItem('totalCount') || '0');
+    
+    if (isCorrect) {
+        correctCount++;
+    }
+    totalCount++;
+    
+    localStorage.setItem('correctCount', correctCount);
+    localStorage.setItem('totalCount', totalCount);
+    
+    var accuracy = (correctCount / totalCount * 100).toFixed(2) + '%';
+    document.getElementById('accuracy').innerHTML = accuracy;
+
+    // Study time calculation
+    var startTime = parseInt(localStorage.getItem('startTime') || Date.now());
+    var elapsedTime = Date.now() - startTime;
+    
+    var minutes = Math.floor(elapsedTime / 60000);
+    var seconds = ((elapsedTime % 60000) / 1000).toFixed(0);
+    var studyTime = minutes + " 分 " + (seconds < 10 ? '0' : '') + seconds + " 秒";
+    
+    document.getElementById('study-time').innerHTML = studyTime;
+
+    // Reset start time for the next session
+    localStorage.setItem('startTime', Date.now());
 })();
 </script>

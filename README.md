@@ -9,11 +9,11 @@
 - 判断正确答案
 - 在Anki for Windows/AnkiDroid上兼容性可能最好，Ankiweb 上可能会有字体缺失
 - 夜间模式
+- 单张卡片计时(beta)
+- 正确率统计(beta)
 
 ## TO-DO：
 
-- 计时
-- 正确率统计
 - latex支持
 - 样式优化
 - 写使用方式
