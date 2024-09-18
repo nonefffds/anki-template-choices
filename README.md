@@ -7,7 +7,7 @@
 - 选项乱序
 - 支持单选/多选
 - 判断正确答案
-- 在Anki for Windows/AnkiDroid上兼容性可能最好，Ankiweb 上可能会有字体缺失
+- 在Anki for Windows/Ankiweb 上兼容最好，AnkiDroid 上有bug，其他未测试
 - 夜间模式
 - 单张卡片计时(beta)
 - 正确率统计(beta)
