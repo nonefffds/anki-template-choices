@@ -41,7 +41,8 @@
     const gData = {};
     const optionsHtml = `{{选项}}`;
     let options = optionsHtml.split('<br>').map(option => option.trim()).filter(option => option !== '');
-    const answer = '{{答案}}';
+    var answer = '{{答案}}';
+    answer = answer.replace(/，/g, ',');
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     
     const shuffleToggle = document.getElementById('shuffle-toggle');

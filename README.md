@@ -45,5 +45,13 @@
 
 ``作为观察当代世界变化的工具<br>指导中国发展的行动指南<br>引领人类社会进步的科学理论<br>提供革命、建设、改革的固定方案``
 
+答案为选项的序号，以英文逗号或中文逗号隔开，以下是答案例：
+
+``1,2,3``
+
+``4``
+
+``1，2，3``
+
 ## 致谢
 [参考了 cyliu-phy/simple-anki-template 的样式](https://github.com/cyliu-phy/simple-anki-template)

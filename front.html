@@ -32,6 +32,7 @@
     var optionsHtml = `{{选项}}`;
     var options = optionsHtml.split('<br>').map(option => option.trim()).filter(option => option !== '');
     var answer = '{{答案}}';
+    answer = answer.replace(/，/g, ',');
     var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     var correctIndexes = answer.split(',').map(a => !isNaN(a) ? parseInt(a) - 1 : alphabet.indexOf(a.toUpperCase()));
