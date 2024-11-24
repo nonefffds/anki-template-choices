@@ -1,0 +1,177 @@
+<div class="card">
+  <div class="h1 xleft">
+    <div class="h2"><strong>{{问题}}</strong></div>
+    <span class="question-type-label"></span>
+    <div id="options" class="options"></div>
+    <div class="night-mode-toggle">
+      <span class="night-mode-label">夜间模式</span>
+      <label class="switch">
+        <input type="checkbox" id="night-mode-toggle">
+        <span class="slider round"></span>
+      </label>
+      <hr>
+      <div class="h2 slide">
+        <div>
+          <span class="shuffle-option">选项乱序</span>
+          <label class="switch">
+            <input type="checkbox" id="shuffle-toggle" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="answer">正确答案: <br><span id="formatted-answer"></span></div>
+        <div class="result">你选择了: <span id="selected-answer"></span></div>
+        <div class="result">是否正确: <span id="correctness"></span></div>
+        <div class="result"><br>正确率: <span id="accuracy"></span></div>
+        <div class="result">此卡学习时间: <span id="study-time"></span></div>
+      </div>
+    </div>
+  </div>
+
+  {{#解析}}
+  <div class="slide">
+    <div class="h1 yleft">
+      <div class="analyse">{{解析}}</div>
+    </div>
+  </div>
+  {{/解析}}
+</div>
+<script>
+(function () {
+    var gData = {};
+
+    // Split and parse options
+    var optionsHtml = `{{选项}}`;
+    var options = optionsHtml.split('|').map(option => option.trim());
+    var answer = '{{答案}}'.toUpperCase();
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    // Parse correct answer indexes from letters
+    var correctIndexes = Array.from(answer).map(a => alphabet.indexOf(a));
+
+    // Retrieve selected options from localStorage
+    let selectedOptions = JSON.parse(localStorage.getItem('selected-options') || '[]');
+
+    // If selectedOptions is empty or undefined, use an empty array as a fallback
+    selectedOptions = Array.isArray(selectedOptions) ? selectedOptions : [];
+
+    // Display the selected answer
+    const selectedAnswer = selectedOptions.join(', ');
+    document.getElementById('selected-answer').innerHTML = selectedAnswer;
+
+    // Render the correct answer in the format of 'A - Option'
+    const formattedAnswer = correctIndexes.map(index => `${alphabet[index]} - ${options[index]}`).join('<br>');
+    document.getElementById('formatted-answer').innerHTML = formattedAnswer;
+
+    // Retrieve the shuffle state from localStorage (whether shuffle is enabled)
+    var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
+    
+    // Handle shuffle logic
+    if (isShuffled) {
+        // Get shuffled options from localStorage or shuffle them
+        options = JSON.parse(localStorage.getItem('shuffled-options') || JSON.stringify(options));
+        correctIndexes = JSON.parse(localStorage.getItem('shuffled-correct-indexes') || JSON.stringify(correctIndexes));
+    }
+
+    // Render the options as buttons (with correct class if selected and correct)
+    const labeledOptions = options.map(function (option, index) {
+        const isSelected = selectedOptions.includes(alphabet[index]);
+        const isCorrect = correctIndexes.includes(index);
+        let className = '';
+        let symbol = '';
+
+        if (isSelected && isCorrect) {
+            className = 'correct';
+            symbol = '✔';
+        } else if (isSelected && !isCorrect) {
+            className = 'incorrect';
+            symbol = '✘';
+        } else if (!isSelected && isCorrect) {
+            className = 'missed';
+        }
+
+        return `<button class="${className}" disabled>
+                  <span style="flex-grow: 1;">${alphabet[index]} - ${option}</span>
+                  <span style="flex-basis: 10%; text-align: right;">${symbol}</span>
+                </button>`;
+    }).join('');
+    document.getElementById('options').innerHTML = labeledOptions;
+
+    // Check if the selected answer is correct
+    const isCorrect = correctIndexes.every(index => selectedOptions.includes(alphabet[index])) && 
+                      selectedOptions.length === correctIndexes.length;
+    const correctness = isCorrect ? '正确' : '错误';
+    document.getElementById('correctness').innerHTML = correctness;
+
+    // Handle shuffle toggle state (whether the shuffle is enabled or not)
+    const shuffleToggle = document.getElementById('shuffle-toggle');
+
+    // Set the initial state of shuffle based on localStorage value
+    shuffleToggle.checked = isShuffled;
+
+    // Add event listener to update the shuffle state in localStorage when toggled
+    shuffleToggle.addEventListener('change', function () {
+        const newShuffleState = shuffleToggle.checked;
+        localStorage.setItem('shuffle-options', JSON.stringify(newShuffleState));
+
+        // Update options based on shuffle state
+        if (newShuffleState) {
+            const shuffled = shuffleOptionsAndAnswers(options, correctIndexes);
+            options = shuffled.options;
+            correctIndexes = shuffled.indexes;
+            localStorage.setItem('shuffled-options', JSON.stringify(options));
+            localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
+        } else {
+            localStorage.removeItem('shuffled-options');
+            localStorage.removeItem('shuffled-correct-indexes');
+        }
+        
+        // Refresh the page to apply the shuffle
+        location.reload();
+    });
+
+    // Night mode toggle
+    var nightModeToggle = document.getElementById('night-mode-toggle');
+    nightModeToggle.addEventListener('change', function () {
+        if (nightModeToggle.checked) {
+            document.documentElement.classList.add('night-mode');
+            localStorage.setItem('night-mode', 'enabled');
+        } else {
+            document.documentElement.classList.remove('night-mode');
+            localStorage.setItem('night-mode', 'disabled');
+        }
+    });
+
+    // Load night mode preference
+    if (localStorage.getItem('night-mode') === 'enabled') {
+        document.documentElement.classList.add('night-mode');
+        nightModeToggle.checked = true;
+    }
+
+    // Calculate and display accuracy
+    let correctCount = parseInt(localStorage.getItem('correctCount') || '0');
+    let totalCount = parseInt(localStorage.getItem('totalCount') || '0');
+    
+    if (isCorrect) {
+        correctCount++;
+    }
+    totalCount++;
+    
+    localStorage.setItem('correctCount', correctCount);
+    localStorage.setItem('totalCount', totalCount);
+    
+    const accuracy = (correctCount / totalCount * 100).toFixed(2) + '%';
+    document.getElementById('accuracy').innerHTML = accuracy;
+
+    // Calculate and display study time
+    const startTime = parseInt(localStorage.getItem('startTime') || Date.now());
+    const elapsedTime = Date.now() - startTime;
+    
+    const minutes = Math.floor(elapsedTime / 60000);
+    const seconds = ((elapsedTime % 60000) / 1000).toFixed(0);
+    const studyTime = minutes + " 分 " + (seconds < 10 ? '0' : '') + seconds + " 秒";
+    
+    document.getElementById('study-time').innerHTML = studyTime;
+
+    localStorage.setItem('startTime', Date.now());
+})();
+</script>
