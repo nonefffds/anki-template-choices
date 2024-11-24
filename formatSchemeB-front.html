@@ -1,0 +1,118 @@
+<div class="card">
+  <div class="h1 xleft">
+    <div class="h2"><strong>{{问题}}</strong></div>
+    <span class="question-type-label"></span>
+    <div id="options" class="options"></div>
+    <div class="night-mode-toggle">
+      <span class="night-mode-label">夜间模式</span>
+      <label class="switch">
+        <input type="checkbox" id="night-mode-toggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+    var gData = {};
+    
+    function shuffleOptionsAndAnswers(options, answerIndexes) {
+        let shuffledOptions = options.map((option, index) => ({ option, index }));
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        return {
+            options: shuffledOptions.map(item => item.option),
+            indexes: shuffledOptions.map((item, i) => answerIndexes.includes(item.index) ? i : null).filter(i => i !== null)
+        };
+    }
+
+    // Split and parse options
+    var optionsHtml = `{{选项}}`;
+    var options = optionsHtml.split('|').map(option => option.trim());
+    var answer = '{{答案}}'.toUpperCase();
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    // Parse correct answer indexes from letters
+    var correctIndexes = Array.from(answer).map(a => alphabet.indexOf(a));
+
+    // Shuffle options if enabled
+    var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
+    if (isShuffled) {
+        const shuffled = shuffleOptionsAndAnswers(options, correctIndexes);
+        options = shuffled.options;
+        correctIndexes = shuffled.indexes;
+        localStorage.setItem('shuffled-options', JSON.stringify(options));
+        localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
+    } else {
+        localStorage.setItem('shuffled-correct-indexes', JSON.stringify(correctIndexes));
+    }
+
+    // Render options as buttons
+    var labeledOptions = options.map(function (option, index) {
+        return `<button id="option${index}" value="${alphabet[index]}" onclick="toggleOption(${index})">${alphabet[index]}. ${option}</button>`;
+    }).join('');
+    document.getElementById('options').innerHTML = labeledOptions;
+
+    // Detect if it's a multiple-choice question
+    var isMultipleChoice = answer.length > 1;
+    var questionType = isMultipleChoice ? '多选题' : '单选题';
+    document.querySelector('.question-type-label').innerHTML += questionType;
+
+    // Toggle option selection
+    window.toggleOption = function (index) {
+        var button = document.getElementById('option' + index);
+        if (!isMultipleChoice) {
+            options.forEach((_, i) => {
+                document.getElementById('option' + i).classList.remove('selected');
+            });
+        }
+        button.classList.toggle('selected');
+        updateSelectedOptions();
+    };
+
+    // Update selected options
+    window.updateSelectedOptions = function () {
+        var selectedOptions = [];
+        options.forEach((_, index) => {
+            var button = document.getElementById('option' + index);
+            if (button && button.classList.contains('selected')) {
+                selectedOptions.push(button.value);
+            }
+        });
+        gData.clickedValues = selectedOptions;
+        localStorage.setItem('selected-options', JSON.stringify(gData.clickedValues));
+
+
+
+        if (typeof anki !== 'undefined' && anki.saveData) {
+            anki.saveData('selected-options', gData.clickedValues);
+        }
+    };
+
+    window.gData = {
+        clickedValues: [],
+        correctanswer: correctIndexes
+    };
+
+    // Night mode toggle
+    var nightModeToggle = document.getElementById('night-mode-toggle');
+    nightModeToggle.addEventListener('change', function () {
+        if (nightModeToggle.checked) {
+            document.documentElement.classList.add('night-mode');
+            localStorage.setItem('night-mode', 'enabled');
+        } else {
+            document.documentElement.classList.remove('night-mode');
+            localStorage.setItem('night-mode', 'disabled');
+        }
+    });
+
+    // Load night mode preference
+    if (localStorage.getItem('night-mode') === 'enabled') {
+        document.documentElement.classList.add('night-mode');
+        nightModeToggle.checked = true;
+    }
+})();
+</script>
