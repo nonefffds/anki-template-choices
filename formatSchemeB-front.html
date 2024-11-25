@@ -52,7 +52,7 @@
 
     // Render options as buttons
     var labeledOptions = options.map(function (option, index) {
-        return `<button id="option${index}" value="${alphabet[index]}" onclick="toggleOption(${index})">${alphabet[index]}. ${option}</button>`;
+        return `<button id="option${index}" value="${alphabet[index]}" onclick="toggleOption(${index})">${alphabet[index]} - ${option}</button>`;
     }).join('');
     document.getElementById('options').innerHTML = labeledOptions;
 
