@@ -58,9 +58,14 @@
     const selectedAnswer = selectedOptions.join(', ');
     document.getElementById('selected-answer').innerHTML = selectedAnswer;
 
-    // Render the correct answer in the format of 'A - Option'
-    const formattedAnswer = correctIndexes.map(index => `${alphabet[index]} - ${options[index]}`).join('<br>');
-    document.getElementById('formatted-answer').innerHTML = formattedAnswer;
+   // Render the correct answer in the format of 'A - Option'
+const formattedAnswer = correctIndexes.map(index => {
+    if (options[index]) {
+        return `${alphabet[index]}. ${options[index]}`;
+    }
+    return ''; // 如果选项为空，则返回空字符串
+}).filter(answer => answer !== '').join('<br>');  // 过滤掉空答案，避免出现不必要的字符
+document.getElementById('formatted-answer').innerHTML = formattedAnswer;
 
     // Retrieve the shuffle state from localStorage (whether shuffle is enabled)
     var isShuffled = JSON.parse(localStorage.getItem('shuffle-options') || 'true');
@@ -128,6 +133,11 @@
         // Refresh the page to apply the shuffle
         location.reload();
     });
+
+	  // Detect if it's a multiple-choice question
+    var isMultipleChoice = answer.length > 1;
+    var questionType = isMultipleChoice ? '多选题' : '单选题';
+    document.querySelector('.question-type-label').innerHTML += questionType;
 
     // Night mode toggle
     var nightModeToggle = document.getElementById('night-mode-toggle');
