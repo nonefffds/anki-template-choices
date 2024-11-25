@@ -14,11 +14,14 @@
 - 单张卡片计时(beta)
 - 正确率统计(beta)
 
+注：新卡片不清除上一张选择的记录是feature，不是bug
+
 ## TO-DO：
 
 - latex支持
 - 样式优化
 - 写使用方式
+- 支持简答题
 
 ## 效果
 
@@ -52,6 +55,14 @@
 ``4``
 
 ``1，2，3``
+
+以下是 formatSchemeB-*.html 的选项例，每个选项以`|`隔开：
+
+``作为观察当代世界变化的工具|指导中国发展的行动指南|引领人类社会进步的科学理论|提供革命、建设、改革的固定方案``
+
+答案不需要任何分割，以下是答案例：
+
+``ABCD``
 
 ## 致谢
 [参考了 cyliu-phy/simple-anki-template 的样式](https://github.com/cyliu-phy/simple-anki-template)
