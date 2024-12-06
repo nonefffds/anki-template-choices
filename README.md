@@ -4,6 +4,8 @@
 
 测试用 anki 卡组包已放在 release 和 [repo 里](for-testing.apkg)
 
+如果你遇到了加密 anki 卡组，我推荐你可以尝试一下 https://gist.github.com/nonefffds/532580aaa591d01f40c5d2c387fac129 的脚本进行解密，参考文档：https://oddpaw.com/2023/07/decrypt-anki-deck/ ，非常感谢原作者的分析和代码提供
+
 ## 功能
 
 - 选项乱序
